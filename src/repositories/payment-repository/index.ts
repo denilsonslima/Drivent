@@ -8,8 +8,20 @@ async function findFirst(id: number) {
   });
 }
 
+async function validateTicketOwnership(id: number) {
+  return prisma.ticket.findFirst({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+    },
+  });
+}
+
 const paymentRepository = {
   findFirst,
+  validateTicketOwnership,
 };
 
 export default paymentRepository;
