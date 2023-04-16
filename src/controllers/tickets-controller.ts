@@ -3,12 +3,22 @@ import httpStatus from 'http-status';
 import ticketService from '@/services/tickets-service';
 import { AuthenticatedRequest } from '@/middlewares';
 
-export async function getTicketType(req: Request, res: Response) {
+export async function getTicketType(req: Request, res: Response, next: NextFunction) {
   try {
     const user = await ticketService.getTicketType();
     return res.status(httpStatus.OK).send(user);
   } catch (error) {
-    res.sendStatus(500);
+    next(error);
+  }
+}
+
+export async function findTicket(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  const { userId } = req;
+  try {
+    const user = await ticketService.findTicket(userId);
+    return res.status(httpStatus.OK).send(user);
+  } catch (error) {
+    next(error);
   }
 }
 

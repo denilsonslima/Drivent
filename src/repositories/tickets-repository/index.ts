@@ -32,10 +32,28 @@ async function findEnrollmetId(id: number) {
   });
 }
 
+async function findTicket(id: number) {
+  return prisma.ticket.findFirst({
+    where: {
+      enrollmentId: id,
+    },
+    select: {
+      id: true,
+      status: true,
+      ticketTypeId: true,
+      enrollmentId: true,
+      TicketType: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+}
+
 const ticketRepository = {
   selectTypeAll,
   createTicket,
   findEnrollmetId,
+  findTicket,
 };
 
 export default ticketRepository;
