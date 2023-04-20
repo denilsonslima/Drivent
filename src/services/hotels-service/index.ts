@@ -22,7 +22,7 @@ async function getHotelbyId(userId: number, hotelId: number) {
 
 async function validateRegistrationTicket(id: number) {
   const validate = await hotelsRepository.validateRegistrationTicket(id);
-  if (!validate) throw notFoundError();
+  if (!validate || !validate.Ticket[0]) throw notFoundError();
   const { status, TicketType } = validate.Ticket[0];
 
   if (status !== 'PAID' || TicketType.isRemote || !TicketType.includesHotel) throw paymentRequiredError();
