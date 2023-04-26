@@ -27,4 +27,4 @@ async function validateRegistrationTicket(id: number) {
 
   if (status !== 'PAID' || TicketType.isRemote || !TicketType.includesHotel) throw paymentRequiredError();
 }
-export default { getHotels, getHotelbyId };
+export default { getHotels, getHotelbyId, validateRegistrationTicket };
