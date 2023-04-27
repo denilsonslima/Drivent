@@ -14,10 +14,10 @@ export async function getBookingByUser(req: AuthenticatedRequest, res: Response,
 }
 
 export async function postBookingByUser(req: AuthenticatedRequest, res: Response) {
-  const { userId } = req;
-  const { roomId } = req.body as validateBody;
+  const userId = Number(req.userId);
+  const roomId = Number(req.body.roomId);
   try {
-    const booking = await bookingService.postBookingByUser(Number(userId), Number(roomId));
+    const booking = await bookingService.postBookingByUser(userId, roomId);
     return res.status(httpStatus.OK).send(booking);
   } catch (err) {
     if (err.name === 'NotFoundError') {
@@ -31,6 +31,21 @@ export async function postBookingByUser(req: AuthenticatedRequest, res: Response
   }
 }
 
-type validateBody = {
-  roomId: number;
-};
+export async function updateBookingByUser(req: AuthenticatedRequest, res: Response) {
+  const userId = Number(req.userId);
+  const roomId = Number(req.body.roomId);
+  const bookingId = Number(req.params.bookingId);
+  try {
+    const booking = await bookingService.updateBookingByUser(userId, roomId, bookingId);
+    return res.status(httpStatus.OK).send(booking);
+  } catch (err) {
+    if (err.name === 'NotFoundError') {
+      return res.status(httpStatus.NOT_FOUND).send({
+        message: err.message,
+      });
+    }
+    return res.status(httpStatus.FORBIDDEN).send({
+      message: err.message,
+    });
+  }
+}

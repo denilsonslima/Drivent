@@ -28,4 +28,16 @@ async function postBookingByUser(userId: number, roomId: number) {
   return { bookingId: res.id };
 }
 
-export default { getBookingByUser, postBookingByUser };
+async function updateBookingByUser(userId: number, roomId: number, bookingId: number) {
+  const findBooking = await bookingRepository.findBookinById(bookingId);
+  if (!findBooking || userId !== findBooking.userId) throw forbiddenError();
+
+  const findRoomId = await bookingRepository.findRoomId(roomId);
+  if (!findRoomId) throw notFoundError();
+  if (findRoomId.Booking.length >= findRoomId.capacity) throw forbiddenError('No vacancies');
+
+  await bookingRepository.updateBookingById(bookingId, roomId);
+  return { bookingId };
+}
+
+export default { getBookingByUser, postBookingByUser, updateBookingByUser };

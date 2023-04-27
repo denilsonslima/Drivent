@@ -39,4 +39,23 @@ async function findRoomId(id: number) {
   });
 }
 
-export default { getBookingByUser, postBookingByUser, findRoomId };
+async function findBookinById(id: number) {
+  return prisma.booking.findUnique({
+    where: {
+      id,
+    },
+  });
+}
+
+async function updateBookingById(id: number, roomId: number) {
+  await prisma.booking.update({
+    where: {
+      id,
+    },
+    data: {
+      roomId,
+    },
+  });
+}
+
+export default { getBookingByUser, postBookingByUser, findRoomId, findBookinById, updateBookingById };
