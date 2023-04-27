@@ -14,7 +14,11 @@ async function getBookingByUser(id: number): Promise<{
 }
 
 async function postBookingByUser(userId: number, roomId: number) {
-  await hotelsRepository.validateRegistrationTicket(userId);
+  const validate = await hotelsRepository.validateRegistrationTicket(userId);
+  if (!validate || !validate.Ticket[0]) throw forbiddenError();
+  const { status, TicketType } = validate.Ticket[0];
+
+  if (status !== 'PAID' || TicketType.isRemote || !TicketType.includesHotel) throw forbiddenError();
 
   const findRoomId = await bookingRepository.findRoomId(roomId);
   if (!findRoomId) throw notFoundError();
